@@ -58,7 +58,8 @@ T = {
 }
 
 e = lambda s: html.escape(s, quote=True)
-play_url = lambda g, l: f"https://play.google.com/store/apps/details?id={g['pkg']}&hl={l}"
+# Play Console > Edinme raporlarında sitenin getirdiği ziyaret ve yüklemeler bu etiketlerle ayrılır
+play_url = lambda g, l, c="game": f"https://play.google.com/store/apps/details?id={g['pkg']}&hl={l}&utm_source=eraistudio.com&utm_medium=website&utm_campaign={c}_{l}"
 title = lambda g, l: g["name"]
 store_title = lambda g, l: PLAY[f"{g['key']}/{l}"]["title"]
 desc = lambda g, l: PLAY[f"{g['key']}/{l}"]["desc"]
@@ -146,7 +147,7 @@ for l in ("en", "tr"):
         gp = t["game"].format(g["slug"])
         rows += f"""<article class="row"><a class="img" href="{gp}"><img src="{feat(g, l)}" width="1024" height="500" alt="{e(title(g, l))}" loading="lazy"></a>
 <div><div class="kicker">{e(g['genre'][l])}</div><h2><a href="{gp}">{e(title(g, l))}</a></h2><p>{e(lead(g, l))}</p>
-<p class="links"><a href="{gp}">{t['more']} →</a> <a class="play" href="{play_url(g, l)}">{t['play']}</a></p></div></article>"""
+<p class="links"><a href="{gp}">{t['more']} →</a> <a class="play" href="{play_url(g, l, 'home')}">{t['play']}</a></p></div></article>"""
     body = f"""<section class="intro"><div class="kicker">{t['kicker']}</div><h1>{t['h1']}</h1><p class="lede">{t['intro']}</p></section>
 <section id="games">{rows}</section>
 <section id="contact" class="contact"><h2>{t['contact_h']}</h2><p>{t['contact_p']}</p><p><a class="mail" href="mailto:{EMAIL}">{EMAIL}</a></p>
@@ -177,7 +178,7 @@ for l in ("en", "tr"):
                     for f, c in [("wordmark_dark.png", "dark"), ("wordmark_light.png", ""), ("icon_1024.png", "")])
     arts = "".join(f"""<div class="pk"><h3><a href="{t['game'].format(g['slug'])}">{e(title(g, l))}</a></h3><p class="kicker">{e(g['genre'][l])}</p>
 <div class="pkimg"><img src="/img/{g['slug']}/icon-512.png" alt="" loading="lazy"><img src="{feat(g, l)}" alt="" loading="lazy"></div>
-<p><a href="/img/{g['slug']}/icon-512.png" download>{t['download']}: icon 512×512</a> · <a href="{feat(g, l).replace('.webp', '.png')}" download>{t['download']}: 1024×500</a> · <a href="{play_url(g, l)}">Google Play</a></p></div>"""
+<p><a href="/img/{g['slug']}/icon-512.png" download>{t['download']}: icon 512×512</a> · <a href="{feat(g, l).replace('.webp', '.png')}" download>{t['download']}: 1024×500</a> · <a href="{play_url(g, l, 'press')}">Google Play</a></p></div>"""
                    for g in GAMES)
     body = f"""<section class="intro"><div class="kicker" lang="en">ErAI Studio</div><h1>{t['press_h']}</h1><p class="lede">{t['press_p']}</p></section>
 <section class="press"><h2>{t['studio_h']}</h2><p>{t['intro']}</p><p><a href="mailto:{EMAIL}">{EMAIL}</a></p>

@@ -5,6 +5,7 @@ import html, json, pathlib, re
 R = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://eraistudio.com"
 EMAIL = "eraistudiogames@gmail.com"
+CF_BEACON = "5d2d8a663fc64ab697e183c93caa1a09"  # Cloudflare Web Analytics (herkese açık site anahtarı, gizli değil)
 PLAY = json.loads((R / "tools/play.json").read_text(encoding="utf-8"))
 SOCIAL = [
     ("YouTube", "https://www.youtube.com/@eraistudiogames"),
@@ -41,7 +42,7 @@ T = {
                follow="Follow us", foot="Independent mobile game studio · Istanbul",
                press_h="Press kit", press_p="Logos, game icons and store art for articles and videos. You may use them to write about ErAI Studio and our games.",
                studio_h="About ErAI Studio", logos="Studio logo", game_art="Game art", download="Download",
-               nf_h="Page not found", nf_p="The page you are looking for does not exist.", lang="en", hreflang="en"),
+               analytics="Visits are counted anonymously with Cloudflare Web Analytics; no cookies are used.", nf_h="Page not found", nf_p="The page you are looking for does not exist.", lang="en", hreflang="en"),
     "tr": dict(home="/tr/", game="/tr/oyunlar/{}/", press="/tr/basin/", games="Oyunlar", press_n="Basın", contact="İletişim",
                other="EN", kicker='<span lang="en">ErAI Studio</span> · İstanbul',
                h1="Her biri kendi dünyasını anlatan küçük mobil oyunlar.",
@@ -53,7 +54,7 @@ T = {
                follow="Bizi takip edin", foot="Bağımsız mobil oyun stüdyosu · İstanbul",
                press_h="Basın kiti", press_p="Yazı ve videolar için logolar, oyun simgeleri ve mağaza görselleri. ErAI Studio ve oyunlarımız hakkında yazarken kullanabilirsiniz.",
                studio_h="ErAI Studio hakkında", logos="Stüdyo logosu", game_art="Oyun görselleri", download="İndir",
-               nf_h="Sayfa bulunamadı", nf_p="Aradığınız sayfa yok.", lang="tr", hreflang="tr"),
+               analytics="Ziyaretler Cloudflare Web Analytics ile anonim olarak sayılır; çerez kullanılmaz.", nf_h="Sayfa bulunamadı", nf_p="Aradığınız sayfa yok.", lang="tr", hreflang="tr"),
 }
 
 e = lambda s: html.escape(s, quote=True)
@@ -95,7 +96,8 @@ def page(l, path, alt_path, ttl, description, body, ld=None, img="/img/brand/ico
 <main>{body}</main>
 <footer class="foot"><div><strong>ErAI Studio</strong> · {t['foot']}</div>
 <div class="soc">{' '.join(f'<a href="{u}" rel="me noopener">{n}</a>' for n, u in SOCIAL)}</div>
-<div><a href="mailto:{EMAIL}">{EMAIL}</a> · © 2026 ErAI Studio</div></footer></body></html>"""
+<div><a href="mailto:{EMAIL}">{EMAIL}</a> · © 2026 ErAI Studio</div><div class="note">{t['analytics']}</div></footer>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON}"}}'></script></body></html>"""
 
 
 def render_desc(s):
